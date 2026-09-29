@@ -1,0 +1,56 @@
+resources:
+  jobs:
+    traffic_etl:
+      name: traffic-etl-${bundle.target}
+
+      parameters:
+        - name: env
+          default: ${bundle.target}
+
+      tasks:
+        - task_key: setup_catalog
+          notebook_task:
+            notebook_path: ../notebooks/01_setup/setup_catalog.py
+            base_parameters:
+              env: "{{job.parameters.env}}"
+
+        - task_key: ingest_traffic
+          depends_on:
+            - task_key: setup_catalog
+          notebook_task:
+            notebook_path: ../notebooks/02_bronze/ingest_traffic.py
+            base_parameters:
+              env: "{{job.parameters.env}}"
+
+        - task_key: ingest_roads
+          depends_on:
+            - task_key: setup_catalog
+          notebook_task:
+            notebook_path: ../notebooks/02_bronze/ingest_roads.py
+            base_parameters:
+              env: "{{job.parameters.env}}"
+
+        - task_key: silver_traffic
+          depends_on:
+            - task_key: ingest_traffic
+          notebook_task:
+            notebook_path: ../notebooks/03_silver/transform_traffic.py
+            base_parameters:
+              env: "{{job.parameters.env}}"
+
+        - task_key: silver_roads
+          depends_on:
+            - task_key: ingest_roads
+          notebook_task:
+            notebook_path: ../notebooks/03_silver/transform_roads.py
+            base_parameters:
+              env: "{{job.parameters.env}}"
+
+        - task_key: gold
+          depends_on:
+            - task_key: silver_traffic
+            - task_key: silver_roads
+          notebook_task:
+            notebook_path: ../notebooks/04_gold/gold_transformations.sql
+            base_parameters:
+              env: "{{job.parameters.env}}"
