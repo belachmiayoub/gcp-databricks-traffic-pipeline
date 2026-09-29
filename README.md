@@ -273,11 +273,3 @@ This project demonstrates:
 - Git-based development
 - basic CI/CD
 
-## Acknowledgement
-
-This portfolio implementation is inspired by the public **gcp-dbx-traffic** learning project by `shaikgcppractice-coder`.  
-The repository structure, code organization, SQL-oriented Gold layer, validation and CI setup in this version were rebuilt for this portfolio project.
-
-## Status
-
-🚧 Infrastructure execution on GCP / Databricks still needs to be configured and tested with the target workspace and bucket.
