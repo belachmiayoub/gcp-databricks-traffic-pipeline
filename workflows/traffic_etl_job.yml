@@ -54,3 +54,11 @@ resources:
             notebook_path: ../notebooks/04_gold/gold_transformations.sql
             base_parameters:
               env: "{{job.parameters.env}}"
+
+        - task_key: validate_pipeline
+          depends_on:
+            - task_key: gold
+          notebook_task:
+            notebook_path: ../notebooks/05_validation/validate_pipeline.py
+            base_parameters:
+              env: "{{job.parameters.env}}"
