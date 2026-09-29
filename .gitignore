@@ -1,0 +1,27 @@
+# Secrets and credentials
+.env
+*.pem
+*.key
+credentials/
+service-account*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Databricks
+.databricks/
+
+# Local temp/data
+tmp/
+.cache/
