@@ -1,14 +1,17 @@
 # Databricks notebook source
+# Creates the Unity Catalog catalog and Medallion schemas for the selected environment.
 
-# Project configuration
-CATALOG_NAME = "traffic_dev"
-SCHEMAS = ["bronze", "silver", "gold"]
+dbutils.widgets.text("env", "dev", "Environment")
+env = dbutils.widgets.get("env").strip().lower()
 
-# Create catalog
-spark.sql(f"CREATE CATALOG IF NOT EXISTS {CATALOG_NAME}")
+if env not in {"dev", "uat", "prd"}:
+    raise ValueError("env must be one of: dev, uat, prd")
 
-# Create Medallion schemas
-for schema in SCHEMAS:
-    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {CATALOG_NAME}.{schema}")
+catalog = f"{env}_catalog"
 
-print(f"Catalog '{CATALOG_NAME}' and schemas {SCHEMAS} created successfully.")
+spark.sql(f"CREATE CATALOG IF NOT EXISTS {catalog}")
+
+for schema in ("bronze", "silver", "gold"):
+    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.{schema}")
+
+print(f"Ready: {catalog}.bronze, {catalog}.silver, {catalog}.gold")
